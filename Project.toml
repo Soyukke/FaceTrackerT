@@ -1,0 +1,9 @@
+name = "FaceTrackerT"
+uuid = "1c604766-48b6-4849-aa26-eef3f8d23bf7"
+authors = ["soyukke <soyukke@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Conda = "8f4d0f93-b110-5947-807f-2305c1781a2d"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
