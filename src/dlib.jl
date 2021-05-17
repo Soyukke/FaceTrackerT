@@ -1,5 +1,7 @@
 using Conda
 using PyCall
+using Plots
+using Images, ImageView
 
 export main0
 
@@ -41,5 +43,17 @@ function main0()
     detector = dlib.get_frontal_face_detector()
     fn_shape = "dev/shape_predictor_68_face_landmarks.dat"
     predictor = dlib.shape_predictor(fn_shape)
-    results = landmark(detector, predictor, gray)
+    marks = landmark(detector, predictor, gray)
+    color = (21, 255, 12)
+
+    img₀ = deepcopy(img)
+    for point2d in marks[1]
+        @show point2d.x, point2d.y
+        img = cv2.drawMarker(img, (point2d.x, point2d.y), color)
+    end
+    # BGR -> RGB
+    # drawMarkerの戻り値はUMatというPyObjectで、`.get()`で値を取得できる。`
+    img_rgb = mapslices(x -> RGB((reverse(Float64.(x) ./ 255))...), img.get(), dims=[3])[:, :, 1]
+    # imshow(img_rgb)
+    return img_rgb
 end
