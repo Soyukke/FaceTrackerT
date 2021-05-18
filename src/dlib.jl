@@ -1,9 +1,12 @@
 using Conda
 using PyCall
 using Plots
-using Images, ImageView
+using Images
+using Makie, VideoIO
 
-export main0
+using CoordinateTransformations, OffsetArrays, Rotations
+
+export main0, drawcamera
 
 """
 Matrix{Int32}
@@ -46,9 +49,7 @@ function main0()
     marks = landmark(detector, predictor, gray)
     color = (21, 255, 12)
 
-    img₀ = deepcopy(img)
     for point2d in marks[1]
-        @show point2d.x, point2d.y
         img = cv2.drawMarker(img, (point2d.x, point2d.y), color)
     end
     # BGR -> RGB
@@ -56,4 +57,20 @@ function main0()
     img_rgb = mapslices(x -> RGB((reverse(Float64.(x) ./ 255))...), img.get(), dims=[3])[:, :, 1]
     # imshow(img_rgb)
     return img_rgb
+end
+
+function drawcamera()
+    f = VideoIO.opencamera()
+    img = read(f)
+    affinmap = recenter(RotMatrix(pi / 2), Images.center(img))
+    img = parent(warp(read(f), affinmap))
+    scene = Makie.Scene(resolution=size(img))
+    makieimg = Makie.image!(scene, img; show_axis=false, scale_plot=true)
+    display(scene)
+
+    while !eof(f)
+        img = parent(warp(read(f), affinmap))
+        makieimg[1] = img
+        sleep(1 / 30)
+    end
 end
