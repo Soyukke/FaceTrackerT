@@ -4,9 +4,17 @@ DlibをPyCall経由で実行し、顔の情報を取得する。
 
 ## MEMO
 
+condaでinstallするとCUDNNパスを設定していても`DLIB_USE_CUDA=true`とならなかったので、pipでinstallしてbuildする。
+Windowsの場合、CMake, Visual Studioをインストールする必要がある。
+```julia
+using PyCall
+# Dlib install by pip
+run(`$(PyCall.python) -m pip install dlib`)
+```
+
 ```julia
 using Conda
-Conda.add("dlib"; channel="conda-forge")
+# Conda.add("dlib"; channel="conda-forge")
 Conda.add("opencv"; channel="conda-forge")
 Conda.add("numpy")
 ```
