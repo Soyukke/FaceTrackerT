@@ -41,3 +41,8 @@ while !eof(f)
     sleep(1/30)
 end
 ```
+
+## TODO
+
+* [ ] ポイントからJulia Structに変換
+* [ ] Julia ServerでREST対応する
